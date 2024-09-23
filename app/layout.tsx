@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
+import { ConvexClientProvider } from "./ConvexClientProvider";
+
 const NotoKR = Noto_Sans_KR({
   subsets: ["latin"],
   weight: ["100", "400", "700", "900"],
@@ -20,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={NotoKR.className}>{children}</body>
+      <body className={NotoKR.className}>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
+      </body>
     </html>
   );
 }
