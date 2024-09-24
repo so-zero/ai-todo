@@ -69,8 +69,26 @@ const authTables = {
 
 export default defineSchema({
   ...authTables,
-  tasks: defineTable({
+  todos: defineTable({
+    userId: v.id("users"),
+    projectId: v.id("projects"),
+    taskName: v.string(),
+    description: v.optional(v.string()),
+    dueDate: v.number(),
     isCompleted: v.boolean(),
-    text: v.string(),
+  }),
+  subTodos: defineTable({
+    userId: v.id("users"),
+    projectId: v.id("projects"),
+    parentId: v.id("todos"),
+    taskName: v.string(),
+    description: v.optional(v.string()),
+    dueDate: v.number(),
+    isCompleted: v.boolean(),
+  }),
+  projects: defineTable({
+    userId: v.id("users"),
+    name: v.string(),
+    type: v.union(v.literal("user"), v.literal("system")),
   }),
 });
