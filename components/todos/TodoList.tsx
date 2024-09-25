@@ -3,12 +3,20 @@
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 
-import TodoTask from "./TodoTask";
+import Todos from "./Todos";
+import CompletedTodos from "./CompletedTodos";
 
 export default function TodoList() {
   const todos = useQuery(api.todos.get) ?? [];
+  const completedTodos = useQuery(api.todos.completedTodos) ?? [];
+  const inCompletedTodos = useQuery(api.todos.inCompletedTodos) ?? [];
+  const totalTodos = useQuery(api.todos.totalTodos) ?? 0;
 
-  if (todos === undefined) {
+  if (
+    todos === undefined ||
+    completedTodos === undefined ||
+    inCompletedTodos === undefined
+  ) {
     <p>로딩중..</p>;
   }
 
@@ -19,10 +27,14 @@ export default function TodoList() {
       </div>
 
       <div className="flex flex-col gap-1 py-4">
-        {todos.map((task) => (
-          <TodoTask {...task} key={task._id} />
-        ))}
+        <Todos todo={inCompletedTodos} />
       </div>
+
+      <div className="flex flex-col gap-1 py-4">
+        <Todos todo={completedTodos} />
+      </div>
+
+      <CompletedTodos totalTodos={totalTodos} />
     </div>
   );
 }

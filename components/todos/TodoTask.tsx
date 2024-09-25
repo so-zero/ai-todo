@@ -2,7 +2,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import clsx from "clsx";
 
-export default function TodoTask({ taskName, _id, isCompleted }) {
+export default function TodoTask({
+  taskName,
+  _id,
+  isCompleted,
+  handleOnChange,
+}) {
   return (
     <div
       key={_id}
@@ -14,6 +19,7 @@ export default function TodoTask({ taskName, _id, isCompleted }) {
             <Checkbox
               id="todo"
               checked={isCompleted}
+              onCheckedChange={handleOnChange}
               className={clsx(
                 "w-4 h-4",
                 isCompleted &&
