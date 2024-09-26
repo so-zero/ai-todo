@@ -1,3 +1,4 @@
+import { Id } from "./_generated/dataModel";
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -53,5 +54,35 @@ export const unCheckTodo = mutation({
   handler: async (ctx, { taskId }) => {
     const newTaskId = await ctx.db.patch(taskId, { isCompleted: false });
     return newTaskId;
+  },
+});
+
+export const createTodo = mutation({
+  args: {
+    taskName: v.string(),
+    description: v.optional(v.string()),
+    dueDate: v.number(),
+    priority: v.number(),
+    projectId: v.id("projects"),
+  },
+  handler: async (
+    ctx,
+    { taskName, description, dueDate, priority, projectId }
+  ) => {
+    try {
+      const newTaskId = await ctx.db.insert("todos", {
+        userId: "jn7bq0h9sesjcm8keyppz3j1sh71brja" as Id<"users">,
+        taskName,
+        description,
+        dueDate,
+        priority,
+        projectId,
+        isCompleted: false,
+      });
+      return newTaskId;
+    } catch (error) {
+      console.log("createTodo Error", error);
+      return "";
+    }
   },
 });

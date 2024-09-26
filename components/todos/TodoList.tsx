@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 
 import Todos from "./Todos";
 import CompletedTodos from "./CompletedTodos";
+import { AddTask } from "./AddTaskBtn";
 
 export default function TodoList() {
   const todos = useQuery(api.todos.get) ?? [];
@@ -29,6 +30,8 @@ export default function TodoList() {
       <div className="flex flex-col gap-1 py-4">
         <Todos todo={inCompletedTodos} />
       </div>
+
+      <AddTask />
 
       <div className="flex flex-col gap-1 py-4">
         <Todos todo={completedTodos} />
