@@ -1,16 +1,22 @@
+import { Doc } from "@/convex/_generated/dataModel";
+import clsx from "clsx";
+import TodoDialog from "./TodoDialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import clsx from "clsx";
 
 export default function TodoTask({
-  taskName,
-  _id,
+  data,
   isCompleted,
   handleOnChange,
+}: {
+  data: Doc<"todos">;
+  isCompleted: boolean;
+  handleOnChange: any;
 }) {
+  const { taskName } = data;
   return (
     <div
-      key={_id}
+      key={data._id}
       className="flex items-center space-x-0 p-2 border-b border-gray-100 animate-in fade-in"
     >
       <Dialog>
@@ -39,6 +45,7 @@ export default function TodoTask({
               </div>
             </DialogTrigger>
           </div>
+          <TodoDialog data={data} />
         </div>
       </Dialog>
     </div>
