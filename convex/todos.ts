@@ -1,3 +1,4 @@
+import moment from "moment";
 import { Id } from "./_generated/dataModel";
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
@@ -6,6 +7,36 @@ export const get = query({
   args: {},
   handler: async (ctx) => {
     return await ctx.db.query("todos").collect();
+  },
+});
+
+export const todayTodos = query({
+  args: {},
+  handler: async (ctx) => {
+    const todayStart = moment().startOf("day");
+    const todayEnd = moment().endOf("day");
+
+    return await ctx.db
+      .query("todos")
+      .filter(
+        (q) =>
+          q.gte(q.field("dueDate"), todayStart.valueOf()) &&
+          q.lte(todayEnd.valueOf(), q.field("dueDate"))
+      )
+      .collect();
+  },
+});
+
+export const lastTodos = query({
+  args: {},
+  handler: async (ctx) => {
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    return await ctx.db
+      .query("todos")
+      .filter((q) => q.lt(q.field("dueDate"), todayStart.getTime()))
+      .collect();
   },
 });
 
