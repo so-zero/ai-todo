@@ -40,6 +40,24 @@ export const lastTodos = query({
   },
 });
 
+export const upcomingTodos = query({
+  args: {},
+  handler: async (ctx) => {
+    const todos = await ctx.db
+      .query("todos")
+      .filter((q) => q.gt(q.field("dueDate"), new Date().getTime()))
+      .collect();
+
+    const upcoming = todos.reduce<any>((acc, todo) => {
+      const dueDate = new Date(todo.dueDate).toDateString();
+      acc[dueDate] = (acc[dueDate] || []).concat(todo);
+      return acc;
+    }, {});
+
+    return upcoming;
+  },
+});
+
 export const completedTodos = query({
   args: {},
   handler: async (ctx) => {
