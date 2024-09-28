@@ -10,6 +10,47 @@ export const get = query({
   },
 });
 
+export const getCompletedTodos = query({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    return await ctx.db
+      .query("todos")
+      .filter((q) => q.eq(q.field("projectId"), projectId))
+      .filter((q) => q.eq(q.field("isCompleted"), true))
+      .collect();
+  },
+});
+
+export const getInCompletedTodos = query({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    return await ctx.db
+      .query("todos")
+      .filter((q) => q.eq(q.field("projectId"), projectId))
+      .filter((q) => q.eq(q.field("isCompleted"), false))
+      .collect();
+  },
+});
+
+export const getTotalProjectId = query({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    const todos = await ctx.db
+      .query("todos")
+      .filter((q) => q.eq(q.field("projectId"), projectId))
+      .filter((q) => q.eq(q.field("isCompleted"), true))
+      .collect();
+
+    return todos?.length || 0;
+  },
+});
+
 export const todayTodos = query({
   args: {},
   handler: async (ctx) => {
