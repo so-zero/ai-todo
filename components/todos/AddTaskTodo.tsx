@@ -46,20 +46,28 @@ const formSchema = z.object({
 
 export default function AddTaskTodo({
   setShowAddTask,
+  parentTask,
 }: {
   setShowAddTask: Dispatch<SetStateAction<boolean>>;
+  parentId?: Id<"todos">;
+  parentTask: Doc<"todos">;
 }) {
+  const projectId = parentTask?.projectId || "k570jjxpb4wbtr5pyymj4qs9vh71fr1c";
+  const priority = parentTask?.priority?.toString() || "1";
+  const parentId = parentTask?._id;
+
   const { toast } = useToast();
   const projects = useQuery(api.projects.getProjects) ?? [];
 
   const createTodo = useMutation(api.todos.createTodo);
+  const createSubTodo = useMutation(api.subTodos.createSubTodo);
 
   const defaultValues = {
     taskName: "",
     description: "",
     dueDate: new Date(),
-    priority: "1",
-    projectId: ("k570jjxpb4wbtr5pyymj4qs9vh71fr1c" as Id<"projects">) || "",
+    priority,
+    projectId,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,31 +79,50 @@ export default function AddTaskTodo({
     const { taskName, description, dueDate, priority, projectId } = data;
 
     if (projectId) {
-      const mutationId = createTodo({
-        taskName,
-        description,
-        dueDate: moment(dueDate).valueOf(),
-        priority: parseInt(priority),
-        projectId: projectId as Id<"projects">,
-      });
-
-      if (mutationId !== undefined) {
-        toast({
-          title: "💖 등록되었습니다.",
-          duration: 3000,
+      if (parentId) {
+        const mutationId = createSubTodo({
+          parentId,
+          taskName,
+          description,
+          dueDate: moment(dueDate).valueOf(),
+          priority: parseInt(priority),
+          projectId: projectId as Id<"projects">,
         });
-        form.reset({ ...defaultValues });
-        setShowAddTask(false);
+
+        if (mutationId !== undefined) {
+          toast({
+            title: "💕 등록되었습니다.",
+            duration: 3000,
+          });
+          form.reset({ ...defaultValues });
+          setShowAddTask(false);
+        }
+      } else {
+        const mutationId = createTodo({
+          taskName,
+          description,
+          dueDate: moment(dueDate).valueOf(),
+          priority: parseInt(priority),
+          projectId: projectId as Id<"projects">,
+        });
+
+        if (mutationId !== undefined) {
+          toast({
+            title: "💖 등록되었습니다.",
+            duration: 3000,
+          });
+          form.reset({ ...defaultValues });
+          setShowAddTask(false);
+        }
       }
     }
   }
-
   return (
     <div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-2 p-2 px-3 pt-4 my-2 rounded-xl border border-gray-200 border-foreground/20"
+          className="space-y-2 p-2 px-3 pt-4 my-2 rounded-xl border border-gray-200 border-foreground/20 bg-white"
         >
           <FormField
             control={form.control}
@@ -146,7 +173,7 @@ export default function AddTaskTodo({
                         <Button
                           variant={"outline"}
                           className={clsx(
-                            "flex gap-2 w-[200px] lg:w-[260px] pl-3 text-left font-normal",
+                            "flex gap-2 w-[180px] sm:w-[200px] lg:w-[260px] pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -179,7 +206,7 @@ export default function AddTaskTodo({
                 <FormItem>
                   <Select onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger className="w-[110px] lg:w-[130px]">
+                      <SelectTrigger className="w-[90px] sm:w-[110px] lg:w-[130px]">
                         <SelectValue placeholder="중요도" />
                       </SelectTrigger>
                     </FormControl>
@@ -205,10 +232,10 @@ export default function AddTaskTodo({
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={projectId || field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-[150px] md:w-[240px]">
+                      <SelectTrigger className="w-[130px] sm:w-[150px] md:w-[240px]">
                         <SelectValue placeholder="프로젝트" />
                       </SelectTrigger>
                     </FormControl>

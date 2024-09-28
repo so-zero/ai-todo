@@ -9,7 +9,7 @@ export default function TodoTask({
   isCompleted,
   handleOnChange,
 }: {
-  data: Doc<"todos">;
+  data: Doc<"todos"> | Doc<"subTodos">;
   isCompleted: boolean;
   handleOnChange: any;
 }) {
@@ -45,7 +45,7 @@ export default function TodoTask({
               </div>
             </DialogTrigger>
           </div>
-          <TodoDialog data={data} />
+          {!data?.parentId && <TodoDialog data={data} />}
         </div>
       </Dialog>
     </div>
