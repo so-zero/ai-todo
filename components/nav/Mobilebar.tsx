@@ -1,18 +1,12 @@
 import Link from "next/link";
-import { Menu, Search, CircleUser } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { navItems } from "@/utils";
 import UserProfile from "./UserProfile";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { FolderPlus } from "lucide-react";
 
 export default function Mobilebar() {
   return (
@@ -26,12 +20,12 @@ export default function Mobilebar() {
               className="shrink-0 md:hidden"
             >
               <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle navigation menu</span>
+              <span className="sr-only">메뉴</span>
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col">
             <nav className="grid gap-2 text-lg font-medium">
-              <div className="px-3 pt-2 pb-4 border-b">
+              <div className="px-3 pt-2 pb-5 border-b">
                 <UserProfile />
               </div>
               {navItems.map((item, index) => (
@@ -44,6 +38,18 @@ export default function Mobilebar() {
                   {item.name}
                 </Link>
               ))}
+              <div className="flex items-center mt-6 mb-2 px-3">
+                <p className="flex flex-1">프로젝트</p>
+                <Dialog>
+                  <DialogTrigger id="closeDialog">
+                    <FolderPlus
+                      className="w-5 h-5 text-muted-foreground hover:text-primary transition-all"
+                      aria-label="프로젝트 추가"
+                    />
+                  </DialogTrigger>
+                  <DialogContent>Hi</DialogContent>
+                </Dialog>
+              </div>
             </nav>
           </SheetContent>
         </Sheet>
@@ -59,42 +65,7 @@ export default function Mobilebar() {
             </div>
           </form>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="secondary" size="icon" className="rounded-full">
-              <CircleUser className="h-5 w-5" />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
       </header>
-      <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-        <div className="flex items-center">
-          <h1 className="text-lg font-semibold md:text-2xl">Inventory</h1>
-        </div>
-        <div
-          className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
-          x-chunk="dashboard-02-chunk-1"
-        >
-          <div className="flex flex-col items-center gap-1 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              You have no products
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              You can start selling as soon as you add a product.
-            </p>
-            <Button className="mt-4">Add Product</Button>
-          </div>
-        </div>
-      </main>
     </div>
   );
 }
