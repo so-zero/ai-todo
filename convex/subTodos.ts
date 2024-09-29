@@ -10,20 +10,26 @@ export const get = query({
 });
 
 export const completedSubTodos = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    parentId: v.id("todos"),
+  },
+  handler: async (ctx, { parentId }) => {
     return await ctx.db
       .query("subTodos")
+      .filter((q) => q.eq(q.field("parentId"), parentId))
       .filter((q) => q.eq(q.field("isCompleted"), true))
       .collect();
   },
 });
 
 export const inCompletedSubTodos = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    parentId: v.id("todos"),
+  },
+  handler: async (ctx, { parentId }) => {
     return await ctx.db
       .query("subTodos")
+      .filter((q) => q.eq(q.field("parentId"), parentId))
       .filter((q) => q.eq(q.field("isCompleted"), false))
       .collect();
   },

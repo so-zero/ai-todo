@@ -20,8 +20,14 @@ export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
 
   const project = useQuery(api.projects.getProjectId, { projectId });
 
-  const completedSubTodos = useQuery(api.subTodos.completedSubTodos) ?? [];
-  const inCompletedSubTodos = useQuery(api.subTodos.inCompletedSubTodos) ?? [];
+  const completedSubTodos =
+    useQuery(api.subTodos.completedSubTodos, {
+      parentId: _id,
+    }) ?? [];
+  const inCompletedSubTodos =
+    useQuery(api.subTodos.inCompletedSubTodos, {
+      parentId: _id,
+    }) ?? [];
 
   const checkSubTodo = useMutation(api.subTodos.checkSubTodo);
   const unCheckSubTodo = useMutation(api.subTodos.unCheckSubTodo);
