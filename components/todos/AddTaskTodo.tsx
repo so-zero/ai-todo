@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 import moment from "moment";
@@ -59,8 +59,10 @@ export default function AddTaskTodo({
   const { toast } = useToast();
   const projects = useQuery(api.projects.getProjects) ?? [];
 
-  const createTodo = useMutation(api.todos.createTodo);
-  const createSubTodo = useMutation(api.subTodos.createSubTodo);
+  const createTodoEmbeddings = useAction(api.todos.createTodoEmbeddings);
+  const createSubTodoEmbeddings = useAction(
+    api.subTodos.createSubTodoEmbeddings
+  );
 
   const defaultValues = {
     taskName: "",
@@ -75,12 +77,12 @@ export default function AddTaskTodo({
     defaultValues,
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     const { taskName, description, dueDate, priority, projectId } = data;
 
     if (projectId) {
       if (parentId) {
-        const mutationId = createSubTodo({
+        const actionId = createSubTodoEmbeddings({
           parentId,
           taskName,
           description,
@@ -89,7 +91,7 @@ export default function AddTaskTodo({
           projectId: projectId as Id<"projects">,
         });
 
-        if (mutationId !== undefined) {
+        if (actionId !== undefined) {
           toast({
             title: "💕 등록되었습니다.",
             duration: 3000,
@@ -98,7 +100,7 @@ export default function AddTaskTodo({
           setShowAddTask(false);
         }
       } else {
-        const mutationId = createTodo({
+        const actionId = createTodoEmbeddings({
           taskName,
           description,
           dueDate: moment(dueDate).valueOf(),
@@ -106,7 +108,7 @@ export default function AddTaskTodo({
           projectId: projectId as Id<"projects">,
         });
 
-        if (mutationId !== undefined) {
+        if (actionId !== undefined) {
           toast({
             title: "💖 등록되었습니다.",
             duration: 3000,

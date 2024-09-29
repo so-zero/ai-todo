@@ -43,12 +43,15 @@ export const suggestAi = action({
 
       for (let i = 0; i < items.length; i++) {
         const { taskName, description } = items[i];
+        const embedding = await getEmbeddingsAI(taskName);
+
         await ctx.runMutation(api.todos.createTodo, {
           taskName,
           description,
           priority: 1,
           dueDate: new Date().getTime(),
           projectId,
+          embedding,
         });
       }
     }
@@ -101,6 +104,8 @@ export const suggestSubAi = action({
 
       for (let i = 0; i < items.length; i++) {
         const { taskName, description } = items[i];
+        const embedding = await getEmbeddingsAI(taskName);
+
         await ctx.runMutation(api.subTodos.createSubTodo, {
           taskName,
           description,
@@ -108,8 +113,42 @@ export const suggestSubAi = action({
           dueDate: new Date().getTime(),
           projectId,
           parentId,
+          embedding,
         });
       }
     }
   },
 });
+
+export const getEmbeddingsAI = async (searchText: string) => {
+  if (!apiKey) {
+    throw new Error("Open AI key가 존재하지 않습니다.");
+  }
+
+  const req = {
+    input: searchText,
+    model: "text-embedding-ada-002",
+    encoding_format: "float",
+  };
+
+  const response = await fetch("https://api.openai.com/v1/embeddings", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(req),
+  });
+
+  if (!response.ok) {
+    const msg = await response.text();
+    throw new Error(`OpenAI Error ${msg}`);
+  }
+
+  const json = await response.json();
+  const vector = json["data"][0]["embedding"];
+
+  console.log(`Embedding ${searchText}: ${vector.length}`);
+
+  return vector;
+};

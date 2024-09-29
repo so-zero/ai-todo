@@ -77,6 +77,11 @@ export default defineSchema({
     dueDate: v.number(),
     priority: v.optional(v.float64()),
     isCompleted: v.boolean(),
+    embedding: v.optional(v.array(v.float64())),
+  }).vectorIndex("by_embedding", {
+    vectorField: "embedding",
+    dimensions: 1536,
+    filterFields: ["userId"],
   }),
   subTodos: defineTable({
     userId: v.id("users"),
@@ -87,6 +92,11 @@ export default defineSchema({
     dueDate: v.number(),
     priority: v.optional(v.float64()),
     isCompleted: v.boolean(),
+    embedding: v.optional(v.array(v.float64())),
+  }).vectorIndex("by_embedding", {
+    vectorField: "embedding",
+    dimensions: 1536,
+    filterFields: ["userId"],
   }),
   projects: defineTable({
     userId: v.union(v.id("users"), v.null()),

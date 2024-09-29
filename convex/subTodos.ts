@@ -1,6 +1,8 @@
+import { api } from "./_generated/api";
 import { Id } from "./_generated/dataModel";
-import { query, mutation } from "./_generated/server";
+import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
+import { getEmbeddingsAI } from "./openai";
 
 export const get = query({
   args: {},
@@ -71,10 +73,11 @@ export const createSubTodo = mutation({
     priority: v.number(),
     projectId: v.id("projects"),
     parentId: v.id("todos"),
+    embedding: v.optional(v.array(v.float64())),
   },
   handler: async (
     ctx,
-    { taskName, description, dueDate, priority, projectId, parentId }
+    { taskName, description, dueDate, priority, projectId, parentId, embedding }
   ) => {
     try {
       const newTaskId = await ctx.db.insert("subTodos", {
@@ -86,11 +89,38 @@ export const createSubTodo = mutation({
         priority,
         projectId,
         isCompleted: false,
+        embedding,
       });
       return newTaskId;
     } catch (error) {
       console.log("create subTodo Error", error);
       return null;
     }
+  },
+});
+
+export const createSubTodoEmbeddings = action({
+  args: {
+    taskName: v.string(),
+    description: v.optional(v.string()),
+    priority: v.number(),
+    dueDate: v.number(),
+    projectId: v.id("projects"),
+    parentId: v.id("todos"),
+  },
+  handler: async (
+    ctx,
+    { taskName, description, priority, dueDate, projectId, parentId }
+  ) => {
+    const embedding = await getEmbeddingsAI(taskName);
+    await ctx.runMutation(api.subTodos.createSubTodo, {
+      taskName,
+      description,
+      priority,
+      dueDate,
+      projectId,
+      parentId,
+      embedding,
+    });
   },
 });
