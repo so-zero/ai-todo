@@ -9,6 +9,18 @@ export const get = query({
   },
 });
 
+export const getSubTodos = query({
+  args: {
+    parentId: v.id("todos"),
+  },
+  handler: async (ctx, { parentId }) => {
+    return await ctx.db
+      .query("subTodos")
+      .filter((q) => q.eq(q.field("parentId"), parentId))
+      .collect();
+  },
+});
+
 export const completedSubTodos = query({
   args: {
     parentId: v.id("todos"),

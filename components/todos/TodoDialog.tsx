@@ -11,9 +11,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { Button } from "../ui/button";
 import TodoTask from "./TodoTask";
 import { AddTask } from "./AddTaskBtn";
+import AiTodoTask from "./AiTodoTask";
 
 export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
   const { taskName, description, projectId, dueDate, priority, _id } = data;
@@ -80,7 +80,13 @@ export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
               </p>
             </div>
             <div>
-              <Button variant="outline">AI 추천🤖</Button>
+              <AiTodoTask
+                projectId={projectId}
+                taskName={taskName}
+                description={description}
+                parentId={_id}
+                isSubTask={true}
+              />
             </div>
           </div>
           <div className="pl-4">
