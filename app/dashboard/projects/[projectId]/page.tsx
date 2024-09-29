@@ -11,6 +11,7 @@ import Todos from "@/components/todos/Todos";
 import { Hash } from "lucide-react";
 import { AddTask } from "@/components/todos/AddTaskBtn";
 import CompletedTodos from "@/components/todos/CompletedTodos";
+import AiTodoTask from "@/components/todos/AiTodoTask";
 
 export default function ProjectIdPage() {
   const { projectId } = useParams<{ projectId: Id<"projects"> }>();
@@ -38,9 +39,16 @@ export default function ProjectIdPage() {
       <div className="flex flex-col">
         <Mobilebar />
         <div className="flex flex-1 flex-col gap-4 p-4 lg:px-8">
-          <div className="flex items-center gap-1">
-            <Hash className="w-4 h-4" />
-            <h1 className="text-lg font-semibold md:text-2xl">{projectName}</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <Hash className="w-4 h-4" />
+              <h1 className="text-lg font-semibold md:text-2xl">
+                {projectName}
+              </h1>
+            </div>
+            <div>
+              <AiTodoTask projectId={projectId} />
+            </div>
           </div>
           <div className="flex flex-col gap-1 mt-2">
             <Todos todo={inCompletedTodos} />

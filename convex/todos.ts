@@ -10,6 +10,18 @@ export const get = query({
   },
 });
 
+export const getTodos = query({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    return await ctx.db
+      .query("todos")
+      .filter((q) => q.eq(q.field("projectId"), projectId))
+      .collect();
+  },
+});
+
 export const getCompletedTodos = query({
   args: {
     projectId: v.id("projects"),
