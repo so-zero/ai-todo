@@ -33,12 +33,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { GET_STARTED_PROJECT_ID } from "@/utils";
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
     message: "Task name must be at least 2 characters.",
   }),
-  description: z.string().optional(),
+  description: z.string().optional().default(""),
   dueDate: z.date({ required_error: "A due date is required" }),
   priority: z.string().min(1, { message: "Please select a priority" }),
   projectId: z.string().min(1, { message: "Please select a project" }),
@@ -47,12 +48,16 @@ const formSchema = z.object({
 export default function AddTaskTodo({
   setShowAddTask,
   parentTask,
+  projectId: myProjectId,
 }: {
   setShowAddTask: Dispatch<SetStateAction<boolean>>;
-  parentId?: Id<"todos">;
-  parentTask: Doc<"todos">;
+  parentTask?: Doc<"todos">;
+  projectId?: Id<"projects">;
 }) {
-  const projectId = parentTask?.projectId || "k570jjxpb4wbtr5pyymj4qs9vh71fr1c";
+  const projectId =
+    myProjectId ||
+    parentTask?.projectId ||
+    (GET_STARTED_PROJECT_ID as Id<"projects">);
   const priority = parentTask?.priority?.toString() || "1";
   const parentId = parentTask?._id;
 

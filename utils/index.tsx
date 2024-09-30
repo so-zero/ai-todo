@@ -18,3 +18,5 @@ export const navItems = [
     icon: <CalendarDays className="w-4 h-4" />,
   },
 ];
+
+export const GET_STARTED_PROJECT_ID = "k570jjxpb4wbtr5pyymj4qs9vh71fr1c";

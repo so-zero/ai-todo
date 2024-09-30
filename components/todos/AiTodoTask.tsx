@@ -37,7 +37,9 @@ export default function AiTodoTask({
   const handleAiSubTask = async () => {
     setIsLoading(true);
     try {
-      await suggestSubAi({ projectId, taskName, description, parentId });
+      if (parentId) {
+        await suggestSubAi({ projectId, taskName, description, parentId });
+      }
     } catch (error) {
       console.log("AI 추천 오류", error);
     } finally {

@@ -1,14 +1,24 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Doc } from "@/convex/_generated/dataModel";
+import { Doc, Id } from "@/convex/_generated/dataModel";
 import { Plus } from "lucide-react";
 
 import AddTaskTodo from "./AddTaskTodo";
 
-export const AddTask = ({ parentTask }: { parentTask?: Doc<"todos"> }) => {
+export const AddTask = ({
+  parentTask,
+  projectId,
+}: {
+  parentTask?: Doc<"todos">;
+  projectId?: Id<"projects">;
+}) => {
   const [showAddTask, setShowAddTask] = useState(false);
 
   return showAddTask ? (
-    <AddTaskTodo setShowAddTask={setShowAddTask} parentTask={parentTask} />
+    <AddTaskTodo
+      setShowAddTask={setShowAddTask}
+      parentTask={parentTask}
+      projectId={projectId}
+    />
   ) : (
     <AddTaskBtn
       onClick={() => setShowAddTask(true)}
