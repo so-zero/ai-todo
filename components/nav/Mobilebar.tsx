@@ -2,9 +2,9 @@ import Link from "next/link";
 import { navItems } from "@/utils";
 import UserProfile from "./UserProfile";
 import SearchForm from "./SearchForm";
-import { Menu, FolderPlus } from "lucide-react";
+import AddProject from "../projects/AddProject";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export default function Mobilebar({
@@ -47,15 +47,7 @@ export default function Mobilebar({
                 <Link href={"/dashboard/projects"} className="flex flex-1">
                   프로젝트
                 </Link>
-                <Dialog>
-                  <DialogTrigger id="closeDialog">
-                    <FolderPlus
-                      className="w-5 h-5 text-muted-foreground hover:text-primary transition-all"
-                      aria-label="프로젝트 추가"
-                    />
-                  </DialogTrigger>
-                  <DialogContent>Hi</DialogContent>
-                </Dialog>
+                <AddProject />
               </div>
             </nav>
           </SheetContent>

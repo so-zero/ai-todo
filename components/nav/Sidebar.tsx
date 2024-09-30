@@ -9,9 +9,9 @@ import { Doc } from "@/convex/_generated/dataModel";
 import clsx from "clsx";
 
 import { navItems } from "@/utils";
-import { FolderPlus, Hash } from "lucide-react";
+import { Hash } from "lucide-react";
 import UserProfile from "./UserProfile";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import AddProject from "../projects/AddProject";
 
 interface MyListTitleType {
   [key: string]: string;
@@ -64,15 +64,7 @@ export default function Sidebar() {
                       {LIST_OF_TITLE_IDS[item?.id]}
                     </p>
                     {LIST_OF_TITLE_IDS[item?.id] === "프로젝트" && (
-                      <Dialog>
-                        <DialogTrigger id="closeDialog">
-                          <FolderPlus
-                            className="w-5 h-5 text-muted-foreground hover:text-primary transition-all"
-                            aria-label="프로젝트 추가"
-                          />
-                        </DialogTrigger>
-                        <DialogContent>Hi</DialogContent>
-                      </Dialog>
+                      <AddProject />
                     )}
                   </div>
                 )}

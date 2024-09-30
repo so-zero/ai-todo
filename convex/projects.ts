@@ -1,4 +1,4 @@
-import { query } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const getProjects = query({
@@ -19,5 +19,25 @@ export const getProjectId = query({
       .collect();
 
     return project?.[0] || null;
+  },
+});
+
+export const createProject = mutation({
+  args: {
+    name: v.string(),
+    userId: v.id("users"),
+  },
+  handler: async (ctx, { name, userId }) => {
+    try {
+      const newTaskId = await ctx.db.insert("projects", {
+        userId,
+        name,
+        type: "user",
+      });
+      return newTaskId;
+    } catch (err) {
+      console.log("Error occurred during createProject mutation", err);
+      return "";
+    }
   },
 });
