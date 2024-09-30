@@ -1,14 +1,19 @@
 import Link from "next/link";
-import { Menu, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { navItems } from "@/utils";
 import UserProfile from "./UserProfile";
+import SearchForm from "./SearchForm";
+import { Menu, FolderPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { FolderPlus } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-export default function Mobilebar() {
+export default function Mobilebar({
+  navTitle = "",
+  navLink = "#",
+}: {
+  navTitle?: string;
+  navLink?: string;
+}) {
   return (
     <div className="flex flex-col">
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -39,7 +44,9 @@ export default function Mobilebar() {
                 </Link>
               ))}
               <div className="flex items-center mt-6 mb-2 px-3">
-                <p className="flex flex-1">프로젝트</p>
+                <Link href={"/dashboard/projects"} className="flex flex-1">
+                  프로젝트
+                </Link>
                 <Dialog>
                   <DialogTrigger id="closeDialog">
                     <FolderPlus
@@ -53,17 +60,17 @@ export default function Mobilebar() {
             </nav>
           </SheetContent>
         </Sheet>
-        <div className="w-full flex-1">
-          <form>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-              />
-            </div>
-          </form>
+        <div className="flex items-center md:justify-between w-full gap-1 md:gap-2 py-2">
+          <div className="hidden sm:block sm:flex-1">
+            <Link href={navLink}>
+              <p className="text-sm font-semibold text-foreground/70 w-24">
+                {navTitle}
+              </p>
+            </Link>
+          </div>
+          <div className="w-full flex-1">
+            <SearchForm />
+          </div>
         </div>
       </header>
     </div>

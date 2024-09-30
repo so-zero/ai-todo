@@ -37,7 +37,7 @@ export default function ProjectIdPage() {
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar />
       <div className="flex flex-col">
-        <Mobilebar />
+        <Mobilebar navTitle={"프로젝트"} navLink="/dashboard/projects" />
         <div className="flex flex-1 flex-col gap-4 p-4 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
