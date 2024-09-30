@@ -4,7 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { Doc } from "@/convex/_generated/dataModel";
 import { format } from "date-fns";
 
-import { Calendar, ChevronDown, Flag, Hash } from "lucide-react";
+import { Calendar, ChevronDown, Flag, Hash, Trash2 } from "lucide-react";
 import {
   DialogContent,
   DialogDescription,
@@ -14,8 +14,11 @@ import {
 import TodoTask from "./TodoTask";
 import { AddTask } from "./AddTaskBtn";
 import AiTodoTask from "./AiTodoTask";
+import { useToast } from "@/hooks/use-toast";
 
 export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
+  const { toast } = useToast();
+
   const { taskName, description, projectId, dueDate, priority, _id } = data;
 
   const project = useQuery(api.projects.getProjectId, { projectId });
@@ -31,6 +34,8 @@ export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
 
   const checkSubTodo = useMutation(api.subTodos.checkSubTodo);
   const unCheckSubTodo = useMutation(api.subTodos.unCheckSubTodo);
+
+  const deleteTodo = useMutation(api.todos.deleteTodo);
 
   const [todoDetails, setTodoDetails] = useState([]);
 
@@ -55,6 +60,17 @@ export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
     setTodoDetails(data);
   }, [project?.name, dueDate, priority]);
 
+  const handleDeleteTodo = (e: any) => {
+    e.preventDefault();
+    const deletedId = deleteTodo({ taskId: _id });
+    if (deletedId !== undefined) {
+      toast({
+        title: "🗑️ 삭제되었습니다.",
+        duration: 3000,
+      });
+    }
+  };
+
   return (
     <DialogContent className="max-w-4xl flex flex-col">
       <div className="flex justify-between items-center text-xs">
@@ -69,7 +85,14 @@ export default function TodoDialog({ data }: { data: Doc<"todos"> }) {
         ))}
       </div>
       <DialogHeader>
-        <DialogTitle>{taskName}</DialogTitle>
+        <div className="flex justify-between items-center">
+          <DialogTitle>{taskName}</DialogTitle>
+          <form onSubmit={(e) => handleDeleteTodo(e)}>
+            <button type="submit">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </form>
+        </div>
         <DialogDescription>
           <p className="my-2">{description}</p>
           <div className="flex items-center gap-1 mt-12 border-b border-gray-100 pb-2 flex-wrap justify-between lg:gap-0">

@@ -12,6 +12,7 @@ import { Hash } from "lucide-react";
 import { AddTask } from "@/components/todos/AddTaskBtn";
 import CompletedTodos from "@/components/todos/CompletedTodos";
 import AiTodoTask from "@/components/todos/AiTodoTask";
+import DeleteProject from "@/components/projects/DeleteProject";
 
 export default function ProjectIdPage() {
   const { projectId } = useParams<{ projectId: Id<"projects"> }>();
@@ -46,8 +47,9 @@ export default function ProjectIdPage() {
                 {projectName}
               </h1>
             </div>
-            <div>
+            <div className="flex items-center gap-3 lg:gap-12">
               <AiTodoTask projectId={projectId} />
+              <DeleteProject projectId={projectId} />
             </div>
           </div>
           <div className="flex flex-col gap-1 mt-2">

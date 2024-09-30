@@ -1,4 +1,6 @@
-import { mutation, query } from "./_generated/server";
+import { api } from "./_generated/api";
+import { Doc } from "./_generated/dataModel";
+import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const getProjects = query({
@@ -38,6 +40,48 @@ export const createProject = mutation({
     } catch (err) {
       console.log("Error occurred during createProject mutation", err);
       return "";
+    }
+  },
+});
+
+export const deleteProject = mutation({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    try {
+      const taskId = await ctx.db.delete(projectId);
+      return taskId;
+    } catch (err) {
+      console.log("Error occurred during deleteProject mutation", err);
+      return null;
+    }
+  },
+});
+
+export const deleteProjectAndTasks = action({
+  args: {
+    projectId: v.id("projects"),
+  },
+  handler: async (ctx, { projectId }) => {
+    try {
+      const allTasks = await ctx.runQuery(api.todos.getTodos, {
+        projectId,
+      });
+      const promises = Promise.allSettled(
+        allTasks.map(async (task: Doc<"todos">) =>
+          ctx.runMutation(api.todos.deleteTodo, {
+            taskId: task._id,
+          })
+        )
+      );
+
+      const statuses = await promises;
+      console.log("All tasks promises deletion list", statuses);
+
+      await ctx.runMutation(api.projects.deleteProject, { projectId });
+    } catch (err) {
+      console.log("Error occurred during deleteProjectAndTasks mutation", err);
     }
   },
 });

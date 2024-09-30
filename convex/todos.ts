@@ -216,3 +216,19 @@ export const createTodoEmbeddings = action({
     });
   },
 });
+
+
+export const deleteTodo = mutation({
+  args: {
+    taskId: v.id("todos"),
+  },
+  handler: async (ctx, { taskId }) => {
+    try {
+        const deletedTaskId = await ctx.db.delete(taskId);
+        return deletedTaskId;
+    } catch (err) {
+      console.log("Error occurred during deleteTodo mutation", err);
+      return null;
+    }
+  },
+});
