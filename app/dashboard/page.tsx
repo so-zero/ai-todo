@@ -2,21 +2,21 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useConvexAuth } from "convex/react";
+import { useSession } from "next-auth/react";
 
 import Sidebar from "@/components/nav/Sidebar";
 import Mobilebar from "@/components/nav/Mobilebar";
 import TodoList from "@/components/todos/TodoList";
 
 export default function DashboardPage() {
-  const { isAuthenticated } = useConvexAuth();
+  const session = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!session.data?.user) {
       router.push("/");
     }
-  }, [isAuthenticated, router]);
+  }, [session.data?.user, router]);
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
