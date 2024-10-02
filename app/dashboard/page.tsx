@@ -1,8 +1,23 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useConvexAuth } from "convex/react";
+
 import Sidebar from "@/components/nav/Sidebar";
 import Mobilebar from "@/components/nav/Mobilebar";
 import TodoList from "@/components/todos/TodoList";
 
 export default function DashboardPage() {
+  const { isAuthenticated } = useConvexAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/");
+    }
+  }, [isAuthenticated, router]);
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar />
