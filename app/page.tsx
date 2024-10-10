@@ -1,8 +1,7 @@
 "use client";
-import { useFormStatus } from "react-dom";
-import { signInAction } from "@/lib/actions/auth";
 
-import clsx from "clsx";
+import { useFormStatus } from "react-dom";
+import { signInAction } from "@/hooks/authAction";
 import { Hash, Loader, StepForward } from "lucide-react";
 
 export default function Home() {
