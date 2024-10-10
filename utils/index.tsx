@@ -1,4 +1,9 @@
-import { Inbox, CalendarCheck, CalendarDays } from "lucide-react";
+import {
+  Inbox,
+  CalendarCheck,
+  CalendarDays,
+  CalendarArrowDown,
+} from "lucide-react";
 
 export const navItems = [
   {
@@ -15,6 +20,11 @@ export const navItems = [
   {
     name: "다음",
     link: "/dashboard/upcoming",
+    icon: <CalendarArrowDown className="w-4 h-4" />,
+  },
+  {
+    name: "달력",
+    link: "/dashboard/calendar",
     icon: <CalendarDays className="w-4 h-4" />,
   },
 ];
